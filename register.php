@@ -60,4 +60,4 @@ if(isset($_POST['register-btn'])){
 }
 
 // Render the template
-echo $twig->render('register.html', ['view' => $view]);
+echo $twig->render('register.html', ['view' => $view, 'title' => 'Please Register']);

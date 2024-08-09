@@ -5,7 +5,4 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Render the template
-echo $twig->render('login.html', ['view' => $view]);
-
-
-
+echo $twig->render('login.html', ['view' => $view, 'title' => 'Please Login']);
