@@ -5,9 +5,12 @@ const password_input = document.getElementById("password-input");
 const repeat_password_input = document.getElementById("repeat-password-input");
 const error_message = document.getElementById("error-message");
 const register_btn = document.getElementById("register-btn");
+let taken = false;
 
 // if there are empty values then disable the register button
-register_btn.disabled = true;
+if(register_btn) {
+  register_btn.disabled = true;
+}
 
 // error_message.style.display = 'none';
 error_message.style.visibility = "hidden";
@@ -87,7 +90,9 @@ function getLoginFormErrors(email, password) {
     password_input.parentElement.classList.add("incorrect");
   }
   if (errors.length === 0) {
-    register_btn.disabled = false;
+    if(register_btn) {
+      register_btn.disabled = false;
+    }
   }
   return errors;
 }
@@ -101,6 +106,7 @@ const allInputs = [
 
 allInputs.forEach((input) => {
   input.addEventListener("input", () => {
+    enableSubmitButton();
     error_message.style.visibility = "hidden";
     if (input.parentElement.classList.contains("incorrect")) {
       input.parentElement.classList.remove("incorrect");
@@ -109,85 +115,114 @@ allInputs.forEach((input) => {
   });
 });
 
-//TODO submit button disable on wrong inputs
+// function for submit button enable or disable
+function enableSubmitButton() {
+  if(!register_btn){
+    return;
+  }
+  register_btn.disabled = true;
+  let username = firstname_input.value;
+  let email = email_input.value;
+  let password = password_input.value;
+  let repeat_password = repeat_password_input.value;
+  // if all inputs are filled in then enable the register button
+  if (username.length > 2 && email.length > 4 && password.length > 2 && repeat_password.length > 2 && taken === false) { 
+    register_btn.disabled = false;
+  }
+}
+
 // username validation for keyup and ajax check
-firstname_input.onblur = (e) => {
-  let username = firstname_input.value;
-  if (username.length < 3) {
-    firstname_input.parentElement.classList.add("incorrect");
-    error_message.style.visibility = "visible";
-    error_message.innerText = "Username must have at least 3 characters";
-    register_btn.disabled = true;
-  }
-};
-firstname_input.onkeyup = (e) => {
-  //
-  let username = firstname_input.value;
-  if (username.length < 3) {
-    // console.log(errors);
-    firstname_input.parentElement.classList.add("incorrect");
-    error_message.style.visibility = "visible";
-    error_message.innerText = "Username must have at least 3 characters";
-    register_btn.disabled = true;
-  } else if (/^[a-zA-Z0-9]*$/.test(username) === false) {
-    firstname_input.parentElement.classList.add("incorrect");
-    // error_message.style.display = "block";
-    error_message.style.visibility = "visible";
-    error_message.innerText = "Username must be letters and numbers only";
-    register_btn.disabled = true;
-  } else {
-    // error_message.style.display = "none";
-    error_message.style.visibility = "hidden";
-    firstname_input.parentElement.classList.remove("incorrect");
-    // register_btn.disabled = false;
-    //goto ajax
-    $.ajax({
-      url: "libs/check_available.php",
-      method: "POST",
-      data: {
-        username: username,
-      },
-      success: (data) => {
-        if (data) {
+if(firstname_input) {
+  firstname_input.onblur = (e) => {
+    let username = firstname_input.value;
+    if (username.length < 3) {
+      firstname_input.parentElement.classList.add("incorrect");
+      error_message.style.visibility = "visible";
+      error_message.innerText = "Username must have at least 3 characters";
+      register_btn.disabled = true;
+    }
+    enableSubmitButton();
+  };
+
+  // username validation for keyup and ajax check
+  firstname_input.onkeyup = (e) => {
+    let username = firstname_input.value;
+    if (username.length < 3) {
+      // console.log(errors);
+      firstname_input.parentElement.classList.add("incorrect");
+      error_message.style.visibility = "visible";
+      error_message.innerText = "Username must have at least 3 characters";
+      register_btn.disabled = true;
+    } else if (/^[a-zA-Z0-9]*$/.test(username) === false) {
+      firstname_input.parentElement.classList.add("incorrect");
+      // error_message.style.display = "block";
+      error_message.style.visibility = "visible";
+      error_message.innerText = "Username must be letters and numbers only";
+      register_btn.disabled = true;
+    } else {
+      // error_message.style.display = "none";
+      error_message.style.visibility = "hidden";
+      firstname_input.parentElement.classList.remove("incorrect");
+      enableSubmitButton();
+      //goto ajax
+      $.ajax({
+        url: "libs/check_available.php",
+        method: "POST",
+        data: {
+          username: username,
+        },
+        success: (data) => {
+          if (data == 1 ) {
+            console.log('error');
+            taken = true;
+            firstname_input.parentElement.classList.add("incorrect");
+            error_message.style.visibility = "visible";
+            error_message.innerText = "Username already taken";
+            register_btn.disabled = true;
+          } else {
+            console.log('good:)');
+            taken = false;
+            register_btn.disabled = false;
+          }
+        },
+      });
+    }
+  };
+  //email validation and ajax check
+  email_input.onkeyup = (e) => {
+    let email = email_input.value;
+    // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) === false) {
+    if (email.length < 4) {
+      email_input.parentElement.classList.add("incorrect");
+      error_message.style.visibility = "visible";
+      error_message.innerText = "Invalid email";
+      register_btn.disabled = true;
+    } else {
+      error_message.style.visibility = "hidden";
+      email_input.parentElement.classList.remove("incorrect");
+      enableSubmitButton();
+      $.ajax({
+        url: "libs/check_available.php",
+        method: "POST",
+        data: {
+          email: email,
+        },
+        success: (data) => {
+          if (data == 1 ) {
+            console.log('taken');
+            taken = true;
+            email_input.parentElement.classList.add("incorrect");
+            error_message.style.visibility = "visible";
+            error_message.innerText = "Email already taken";
+            register_btn.disabled = true;
+          } else {
+            console.log('good:)');
+            taken = false;
+            register_btn.disabled = false;
+          }
           // console.log(data);
-          console.log("good:)");
-        }
-      },
-    });
-  }
-};
-
-// let empty = 3;
-// // email validation
-// email_input.onkeyup = (e) => {
-//   if (email_input.value.length.length !== 0) {
-//     empty--;
-//     console.log("empty: " + empty);
-//   }
-// };
-
-// // password validation
-// password_input.onkeyup = (e) => {
-//   if (password_input.value.length.length !== 0) {
-//     empty--;
-//     console.log("empty: " + empty);
-//   }
-// };
-// repeat_password_input.onkeyup = (e) => {
-//   if (
-//     repeat_password_input.value.length !== 0 ||
-//     password_input.value !== repeat_password_input.value
-//   ) {
-//     empty--;
-//     console.log("empty or no match: " + empty);
-//   }
-// };
-// if (empty === 0) {
-//   register_btn.disabled = false;
-// }
-console.log("email length ", email_input.value.length);
-console.log("password length ", password_input.value.length);
-if (email_input.value.length !== 0 && password_input.value.length !== 0) {
-  console.log("filled!");
-  register_btn.disabled = false;
+        },
+      });
+    }
+  };
 }
