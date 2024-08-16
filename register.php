@@ -38,9 +38,7 @@ if(isset($_POST['register-btn'])){
     //     // echo "You must agree to the terms and conditions";
     //     echo $twig->render('login.html', ['view' => $view, 'error' => 'You must agree to the terms and conditions', 'name' => $name, 'email' => $email, 'password' => $password, 'password2' => $password2]);
     //     exit();
-    }    
-    //TODO check if user and email already exists   
-
+    } 
     // if everythink are ok create user:
     $user = R::dispense('users');
 
@@ -60,10 +58,14 @@ if(isset($_POST['register-btn'])){
         exit();
     }
 
+    //TODO after successfuly created user session_start and redirect to game.html
+    //TODO create game.html page
 
-    // $id = R::store( $user );
+    session_start();
+    $_SESSION['user_id'] = $id;
+    $_SESSION['username'] = $name;
 
-
+    //temporary goto login page
     echo $twig->render('login.html', ['view' => $view, 'success' => 'Registered successfully']);
     exit();
 }
