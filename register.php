@@ -1,5 +1,6 @@
 <?php 
 require_once __DIR__ . '/config.php';
+use \RedBeanPHP\R as R;
 
 // Register
 if(isset($_POST['register-btn'])){ 

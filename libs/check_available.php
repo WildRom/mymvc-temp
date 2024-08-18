@@ -1,14 +1,14 @@
 <?php 
 
 require_once __DIR__. '/../vendor/autoload.php';
+use \RedBeanPHP\R as R;
+
 //dotenv .env file helper
 $dotEnv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotEnv->load();
 
 //connect to database by RedBeanPHP Mysql ORM helper
 $string = "mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']}";
-
-require_once 'rb.php';
 
 //connect to database
 R::setup($string, $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
