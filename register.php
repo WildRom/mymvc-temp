@@ -5,10 +5,10 @@ use \RedBeanPHP\R as R;
 // Register
 if(isset($_POST['register-btn'])){ 
     $data = ($_POST);    
-    $name = htmlspecialchars($data['username']);
-    $email = htmlspecialchars($data['email']);
-    $password = htmlspecialchars($data['password']);
-    $password2 = htmlspecialchars($data['password2']);
+    $name = trim($data['username']);
+    $email = trim($data['email']);
+    $password = $data['password'];
+    $password2 = $data['password2'];
 
     if(empty($name) || empty($email) || empty($password) || empty($password2)){
         // echo "Please fill in all fields";
@@ -45,7 +45,7 @@ if(isset($_POST['register-btn'])){
 
     $user->username = $name;
     $user->email = $email;
-    $user->password = $password;
+    $user->password = password_hash($password, PASSWORD_DEFAULT);
     $user->created_at = time();
     $user->updated_at = time();
 
@@ -59,15 +59,13 @@ if(isset($_POST['register-btn'])){
         exit();
     }
 
-    //TODO after successfuly created user session_start and redirect to game.html
+    //TODO after successfuly created user session_start and redirect to main.html
     //TODO create game.html page
 
-    session_start();
-    $_SESSION['user_id'] = $id;
-    $_SESSION['username'] = $name;
+    // $_SESSION['logged_user'] = $user;
 
-    //temporary goto login page
-    echo $twig->render('login.html', ['view' => $view, 'success' => 'Registered successfully']);
+    //goto main page
+    echo $twig->render('main.html', ['view' => $view, 'title' => 'Main page', 'user' => $user]);
     exit();
 }
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{{ tittle }}</title>
+	</head>
+	<body>
+
+		<h2 text-align='center'>Game page!</h2>
+
+		{% if user %}
+
+			<h3>Welcome, {{user.username}}</h3>
+
+		{% else %}
+
+			You are not register!
+
+		{% endif %}
+
+
+		{# <pre> #}
+            {# {{ user | json_encode(constant('JSON_PRETTY_PRINT')) }} #}
+        {# </pre> #}
+	</body>
+</html>

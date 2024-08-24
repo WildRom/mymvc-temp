@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 date_default_timezone_set('Europe/London');
 
 //composer
@@ -32,3 +34,6 @@ $view = 'view/' . $default;
 $loader = new \Twig\Loader\FilesystemLoader($view);
 // $twig = new \Twig\Environment($loader, ['cache' => 'view/cache']);
 $twig = new \Twig\Environment($loader, ['cache' => false]);
+// $twig->addGlobal('session', $_SESSION);
+// $twig->addGlobal('view', $view);
+// $twig->addGlobal('carbon', new Carbon());
