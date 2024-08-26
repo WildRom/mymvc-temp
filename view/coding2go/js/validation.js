@@ -1,9 +1,11 @@
 const form = document.getElementById("form");
 const firstname_input = document.getElementById("username-input");
 const email_input = document.getElementById("email-input");
+const log_email_input = document.getElementById("log-email-input");
 const password_input = document.getElementById("password-input");
 const repeat_password_input = document.getElementById("repeat-password-input");
 const error_message = document.getElementById("error-message");
+const log_error_message = document.getElementById("log-error-message");
 const register_btn = document.getElementById("register-btn");
 let taken = false;
 
@@ -13,7 +15,11 @@ if(register_btn) {
 }
 
 // error_message.style.display = 'none';
-error_message.style.visibility = "hidden";
+if(error_message) {
+  error_message.style.visibility = "hidden";
+} else if(log_error_message) {
+  log_error_message.style.visibility = "hidden";
+}
 
 //on submit if all inputs are filled in then submit the form
 form.addEventListener("submit", (e) => {
@@ -29,15 +35,18 @@ form.addEventListener("submit", (e) => {
     );
   } else {
     // If we don't have a firstname input then we are in the login
-    errors = getLoginFormErrors(email_input.value, password_input.value);
+    console.log("login");
+    errors = getLoginFormErrors(log_email_input.value, password_input.value);
   }
 
   if (errors.length > 0) {
     // If there are any errors
     e.preventDefault();
-    // error_message.style.display = "block";
-    error_message.style.visibility = "visible";
-    // error_message.innerText = errors.join(". ");
+    if(error_message) {
+      error_message.style.visibility = "visible";
+    } else if(log_error_message) {
+      log_error_message.style.visibility = "visible";
+    }
     error_message.innerText = errors[0];
   }
 });
@@ -83,7 +92,7 @@ function getLoginFormErrors(email, password) {
 
   if (email === "" || email == null) {
     errors.push("Email is required");
-    email_input.parentElement.classList.add("incorrect");
+    log_email_input.parentElement.classList.add("incorrect");
   }
   if (password === "" || password == null) {
     errors.push("Password is required");
@@ -100,6 +109,7 @@ function getLoginFormErrors(email, password) {
 const allInputs = [
   firstname_input,
   email_input,
+  log_email_input,
   password_input,
   repeat_password_input,
 ].filter((input) => input != null);
@@ -107,7 +117,11 @@ const allInputs = [
 allInputs.forEach((input) => {
   input.addEventListener("input", () => {
     enableSubmitButton();
-    error_message.style.visibility = "hidden";
+    if(error_message) {
+      error_message.style.visibility = "hidden";
+    } else if(log_error_message) {
+      log_error_message.style.visibility = "hidden";
+    }
     if (input.parentElement.classList.contains("incorrect")) {
       input.parentElement.classList.remove("incorrect");
       error_message.innerText = "";
@@ -131,7 +145,7 @@ function enableSubmitButton() {
   }
 }
 
-// username validation for keyup and ajax check
+// registration form username validation for keyup and ajax check
 if(firstname_input) {
   firstname_input.onblur = (e) => {
     let username = firstname_input.value;
@@ -144,7 +158,7 @@ if(firstname_input) {
     enableSubmitButton();
   };
 
-  // username validation for keyup and ajax check
+  // registration form username validation for keyup and ajax check
   firstname_input.onkeyup = (e) => {
     let username = firstname_input.value;
     if (username.length < 3) {
@@ -180,7 +194,6 @@ if(firstname_input) {
             error_message.innerText = "Username already taken";
             register_btn.disabled = true;
           } else {
-            console.log('good:)');
             taken = false;
             register_btn.disabled = false;
           }
@@ -209,18 +222,15 @@ if(firstname_input) {
         },
         success: (data) => {
           if (data == 1 ) {
-            console.log('taken');
             taken = true;
             email_input.parentElement.classList.add("incorrect");
             error_message.style.visibility = "visible";
             error_message.innerText = "Email already taken";
             register_btn.disabled = true;
           } else {
-            console.log('good:)');
             taken = false;
             register_btn.disabled = false;
           }
-          // console.log(data);
         },
       });
     }

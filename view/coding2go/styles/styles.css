@@ -199,7 +199,7 @@ form div.correct input {
   font-size: 1.25rem;
 } */
 
-.wrapper .error_paragraph {
+.wrapper .error_paragraph, .wrapper .log_error_paragraph {
   background-color: white;
   color: darkred;
   opacity: 0.8;

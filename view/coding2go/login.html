@@ -12,7 +12,11 @@
     </video>
     <div class="wrapper">
       <h1>Login</h1>
-      <p id="error-message" class="error_paragraph">{{ error }}</p>
+      {% if error %}
+      <!-- <p id="log-error-message" class="log_error_paragraph">{{ error }}</p> -->
+      <p class="log_error_paragraph">{{ error }}</p>
+      {% endif %}
+      <!-- <p id="error-message" class="error_paragraph">{{ error }}</p> -->
       <form id="form" method="post" action="login.php">
         <div>
           <label for="email-input">
@@ -21,7 +25,7 @@
           <input
             type="email"
             name="email"
-            id="email-input"
+            id="log-email-input"
             placeholder="Email"
           />
         </div>
