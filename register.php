@@ -62,7 +62,7 @@ if(isset($_POST['register-btn'])){
     //TODO after successfuly created user session_start and redirect to main.html
     //TODO create game.html page
 
-    // $_SESSION['logged_user'] = $user;
+    $_SESSION['logged_user'] = $user;
 
     //goto main page
     echo $twig->render('main.html', ['view' => $view, 'title' => 'Main page', 'user' => $user]);
